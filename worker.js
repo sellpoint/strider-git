@@ -25,6 +25,7 @@ function httpCloneCmd(config, branch) {
   var screen = `git clone --recursive ${urls[1]} .`;
   var args = ['clone', '--recursive', urls[0], '.'];
   if (branch) {
+    branch = branch.replace('tags/', '');
     args = args.concat(['--branch', branch]);
     screen += ` --branch ${branch}`;
   }
@@ -86,7 +87,8 @@ function clone(dest, config, ref, context, done) {
     var cmd = `git clone --recursive ${utils.sshUrl(config)[0]} .`;
     
     if (ref.branch) {
-      cmd += ` --branch ${ref.branch}`;
+      var branch = ref.branch.replace('tags/', '');
+      cmd += ` --branch ${branch}`;
       // this /only/ gets the one branch; so only use if we won't be caching
       if (!config.cache && git_version >= 1.8) {
         cmd += ' --single-branch';
